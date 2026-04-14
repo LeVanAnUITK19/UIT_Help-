@@ -1,0 +1,82 @@
+# ============================================================
+# ROOT .gitignore — Node.js (Express) + Flutter project
+# ============================================================
+
+# ─── OS / Editor ────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.history/
+.atom/
+
+# VS Code (giữ lại nếu muốn share settings thì comment dòng này)
+.vscode/
+
+# JetBrains / IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# ─── Node.js / Backend ──────────────────────────────────────
+backend/node_modules/
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+backend/.env
+backend/.env.*
+backend/dist/
+backend/build/
+backend/.cache/
+backend/logs/
+backend/*.log
+
+# ─── Flutter / Dart / Frontend ──────────────────────────────
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.pub-cache/
+frontend/.pub/
+frontend/build/
+frontend/coverage/
+frontend/pubspec.lock
+
+# Generated files
+frontend/**/.last_build_id
+frontend/**/doc/api/
+frontend/app.*.symbols
+frontend/app.*.map.json
+
+# Android build artifacts
+frontend/android/.gradle/
+frontend/android/app/debug/
+frontend/android/app/profile/
+frontend/android/app/release/
+frontend/android/local.properties
+frontend/android/key.properties
+
+# iOS build artifacts
+frontend/ios/Pods/
+frontend/ios/.symlinks/
+frontend/ios/Flutter/ephemeral/
+frontend/ios/Flutter/flutter_export_environment.sh
+frontend/ios/Flutter/Generated.xcconfig
+frontend/ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS
+frontend/macos/Flutter/ephemeral/
+frontend/macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Windows
+frontend/windows/flutter/generated_plugin_registrant.cc
+frontend/windows/flutter/generated_plugin_registrant.h
+frontend/windows/flutter/generated_plugins.cmake
+
+# Linux
+frontend/linux/flutter/generated_plugin_registrant.cc
+frontend/linux/flutter/generated_plugin_registrant.h
+frontend/linux/flutter/generated_plugins.cmake
+
+# Web
+frontend/web/flutter_service_worker.js
