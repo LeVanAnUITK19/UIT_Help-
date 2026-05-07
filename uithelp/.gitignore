@@ -31,7 +31,7 @@ backend/build/
 backend/.cache/
 backend/logs/
 backend/*.log
-
+backend/src/config/serviceAccountKey.json
 # ─── Flutter / Dart / Frontend ──────────────────────────────
 frontend/.dart_tool/
 frontend/.flutter-plugins

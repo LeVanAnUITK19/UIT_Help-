@@ -40,7 +40,9 @@ class AuthRepository {
     try {
       final raw = await _remote.login(mssv, password);
       // lưu token
-      await _tokenStorage.saveAccessToken(raw['accessToken']);
+      final accessToken = raw['accessToken'] as String? ?? '';
+      final refreshToken = raw['refreshToken'] as String? ?? '';
+      await _tokenStorage.saveTokens(accessToken, refreshToken);
       final user = UserModel.fromJson(raw['user']);
       return (data: user, failure: null);
     } on DioException catch (e) {
@@ -50,11 +52,12 @@ class AuthRepository {
       return (data: null, failure: const NetworkFailure());
     }
   }
+
   Future<AuthResult<void>> forgetPassword(String mssv) async {
-    try{
+    try {
       await _remote.forgotPassword(mssv);
       return (data: null, failure: null);
-    }on DioException catch (e) {
+    } on DioException catch (e) {
       final msg = e.response?.data['message'] ?? 'Lỗi server';
       return (data: null, failure: ServerFailure(msg));
     } on Exception {
@@ -86,10 +89,34 @@ class AuthRepository {
     }
   }
 
-  Future<AuthResult<void>> resetPassword(String resetToken, String newPassword) async {
+  Future<AuthResult<void>> resetPassword(
+    String resetToken,
+    String newPassword,
+  ) async {
     try {
       await _remote.resetPassword(resetToken, newPassword);
       return (data: null, failure: null);
+    } on DioException catch (e) {
+      final msg = e.response?.data['message'] ?? 'Lỗi server';
+      return (data: null, failure: ServerFailure(msg));
+    } on Exception {
+      return (data: null, failure: const NetworkFailure());
+    }
+  }
+
+  Future<void> updateFcmToken(String fcmToken) async {
+    try {
+      await _remote.updateFcmToken(fcmToken);
+    } catch (_) {
+      // silent fail — không block login
+    }
+  }
+
+  Future<AuthResult<UserModel>> fetchProfile() async {
+    try {
+      final raw = await _remote.fetchProfile();
+      final user = UserModel.fromJson(raw);
+      return (data: user, failure: null);
     } on DioException catch (e) {
       final msg = e.response?.data['message'] ?? 'Lỗi server';
       return (data: null, failure: ServerFailure(msg));

@@ -1,36 +1,43 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // UIT Brand Colors
-  static const Color uitBlue = Color(0xFF1E4DB7);
-  static const Color uitBlueDark = Color(0xFF163A8A);
-  static const Color uitBlueLight = Color(0xFF2563EB);
-  static const Color uitBlueAccent = Color(0xFF3B82F6);
+  // ── Brand ──────────────────────────────────────────────────────────────────
+  static const Color uitBlue       = Color(0xFF2563EB);
+  static const Color uitBlueDark   = Color(0xFF1D4ED8);
+  static const Color uitBlueLight  = Color(0xFF3B82F6);
+  static const Color uitBlueAccent = Color(0xFF60A5FA);
+  static const Color slateBlue     = Color(0xFF4F46E5); // Indigo — cao cấp hơn
+  static const Color indigo        = Color(0xFF6366F1);
+  static const Color indigoDark    = Color(0xFF4F46E5);
 
-  // Light Theme
-  static const Color lightBackground = Color(0xFFEEF2F7);
-  static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightCardShadow = Color(0x1A1E4DB7);
-  static const Color lightInputBorder = Color(0xFFD1D9E6);
-  static const Color lightInputFill = Color(0xFFF8FAFF);
-  static const Color lightTextPrimary = Color(0xFF1A2340);
-  static const Color lightTextSecondary = Color(0xFF6B7A99);
-  static const Color lightTextHint = Color(0xFFADB8CC);
-  static const Color lightDivider = Color(0xFFE8EDF5);
+  // ── Light Theme ────────────────────────────────────────────────────────────
+  static const Color lightBackground    = Color(0xFFF8FAFC);
+  static const Color lightSurface       = Color(0xFFFFFFFF);
+  static const Color lightCardShadow    = Color(0x14000000); // 8% black
+  static const Color lightInputBorder   = Color(0xFFE2E8F0);
+  static const Color lightInputFill     = Color(0xFFF1F5F9);
+  static const Color lightTextPrimary   = Color(0xFF0F172A);
+  static const Color lightTextSecondary = Color(0xFF64748B);
+  static const Color lightTextHint      = Color(0xFFCBD5E1);
+  static const Color lightDivider       = Color(0xFFE2E8F0);
 
-  // Dark Theme
-  static const Color darkBackground = Color(0xFF0F1629);
-  static const Color darkSurface = Color(0xFF1A2340);
-  static const Color darkCardShadow = Color(0x33000000);
-  static const Color darkInputBorder = Color(0xFF2A3A5C);
-  static const Color darkInputFill = Color(0xFF1E2D4A);
-  static const Color darkTextPrimary = Color(0xFFE8EDF5);
-  static const Color darkTextSecondary = Color(0xFF8A9BBF);
-  static const Color darkTextHint = Color(0xFF4A5A7A);
-  static const Color darkDivider = Color(0xFF2A3A5C);
+  // ── Dark Theme ─────────────────────────────────────────────────────────────
+  static const Color darkBackground    = Color(0xFF0B1120);
+  static const Color darkSurface       = Color(0xFF151F32);
+  static const Color darkCardShadow    = Color(0x40000000);
+  static const Color darkInputBorder   = Color(0xFF1E2D4A);
+  static const Color darkInputFill     = Color(0xFF1A2540);
+  static const Color darkTextPrimary   = Color(0xFFF1F5F9);
+  static const Color darkTextSecondary = Color(0xFF94A3B8);
+  static const Color darkTextHint      = Color(0xFF334155);
+  static const Color darkDivider       = Color(0xFF1E2D4A);
 
-  // Semantic
-  static const Color error = Color(0xFFE53E3E);
-  static const Color success = Color(0xFF38A169);
-  static const Color warning = Color(0xFFD69E2E);
+  // ── Semantic ───────────────────────────────────────────────────────────────
+  static const Color error        = Color(0xFFEF4444);
+  static const Color errorSoft    = Color(0xFFFEE2E2);
+  static const Color success      = Color(0xFF22C55E);
+  static const Color successSoft  = Color(0xFFDCFCE7);
+  static const Color warning      = Color(0xFFF59E0B);
+  static const Color warningSoft  = Color(0xFFFEF3C7);
+  static const Color infoBg       = Color(0xFFEFF6FF);
 }

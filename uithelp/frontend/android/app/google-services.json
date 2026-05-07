@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "856939611735",
+    "project_id": "uitconnect-f20a8",
+    "storage_bucket": "uitconnect-f20a8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:856939611735:android:a3ec4bcc951e383b7b0512",
+        "android_client_info": {
+          "package_name": "com.example.uithelp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi4CnqbJIqrSBFVgR_Em4up-cFIa_51OU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

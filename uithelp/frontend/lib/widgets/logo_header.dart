@@ -24,7 +24,7 @@ class LogoHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'UIT Help',
+                'UIT Connect',
                 style: isDark
                     ? AppTextStyles.appTitleDark
                     : AppTextStyles.appTitleLight,
@@ -38,7 +38,7 @@ class LogoHeader extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  '- Một chạm giúp nhau',
+                  '- Ba chạm kết nối',
                   style: isDark
                       ? AppTextStyles.appSubtitleDark
                       : AppTextStyles.appSubtitleLight,

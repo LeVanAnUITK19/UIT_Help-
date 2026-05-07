@@ -79,18 +79,20 @@ export const login = async (req: Request, res: Response) => {
 
     res.json({
         accessToken,
+        refreshToken,
         user: {
             id: user._id,
             name: user.name,
             mssv: user.mssv,
             email: user.email,
+            fcmToken: user.fcmToken ?? null,
         }
     });
 };
 
 //Refresh Token
 export const refresh = async (req: Request, res: Response) => {
-    const token = req.cookies.refreshToken;
+    const token = req.cookies.refreshToken || req.body.refreshToken;
     if (!token) return res.sendStatus(401);
 
     try {
@@ -114,7 +116,7 @@ export const refresh = async (req: Request, res: Response) => {
             sameSite: "strict",
         });
 
-        res.json({ accessToken: newAccessToken });
+        res.json({ accessToken: newAccessToken , refreshToken: newRefreshToken});
     } catch (err) {
         return res.sendStatus(403);
     }
@@ -122,7 +124,7 @@ export const refresh = async (req: Request, res: Response) => {
 
 //Logout
 export const logout = async (req: Request, res: Response) => {
-    const token = req.cookies.refreshToken;
+    const token = req.cookies.refreshToken || req.body.refreshToken;
     if (!token) return res.sendStatus(204);
 
     try {
@@ -131,6 +133,7 @@ export const logout = async (req: Request, res: Response) => {
         const user = await User.findById(decoded.userId);
         if (user) {
             user.refreshToken = "";
+            user.fcmToken = null; // xóa token khi logout
             await user.save();
         }
     } catch (err) {
@@ -237,4 +240,17 @@ export const sendEmail = async (to: string, otp: string) => {
         subject: "OTP UIT_Help",
         text: `Mã OTP của bạn là: ${otp}`,
     });
+};
+
+// PUT /auth/fcm-token
+export const updateFcmToken = async (req: Request, res: Response) => {
+  const { fcmToken } = req.body;
+  await User.findByIdAndUpdate(req.user.userId, { fcmToken });
+  res.json({ success: true });
+};
+
+// GET /auth/fcm-token — dùng để debug lấy token
+export const getFcmToken = async (req: Request, res: Response) => {
+  const user = await User.findById(req.user.userId).select('fcmToken');
+  res.json({ fcmToken: user?.fcmToken ?? null });
 };

@@ -1,6 +1,7 @@
 import '../../data/repositories/auth_repository.dart';
 import '../../data/models/user_model.dart';
 import 'package:flutter/material.dart';
+import '../../core/services/fcm_service.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthRepository _repo;
@@ -24,6 +25,17 @@ class AuthViewModel extends ChangeNotifier {
     currentUser = result.data;
     errorMessage = null;
     notifyListeners();
+
+    // Gửi FCM token lên backend sau khi login thành công
+    try {
+      final fcmToken = await FcmService.init();
+      if (fcmToken != null) {
+        await _repo.updateFcmToken(fcmToken);
+      }
+    } catch (e) {
+      debugPrint('[FCM] Token update failed: $e');
+    }
+
     return true;
   }
 
@@ -110,5 +122,13 @@ class AuthViewModel extends ChangeNotifier {
   void _setLoading(bool val) {
     isLoading = val;
     notifyListeners();
+  }
+
+  Future<void> fetchProfile() async {
+    final result = await _repo.fetchProfile();
+    if (result.failure == null && result.data != null) {
+      currentUser = result.data;
+      notifyListeners();
+    }
   }
 }
