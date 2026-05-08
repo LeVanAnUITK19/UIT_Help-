@@ -9,6 +9,13 @@ class ConversationViewModel extends ChangeNotifier {
   final ConversationRepository _repo;
   ConversationViewModel(this._repo);
 
+  // ── Unread count ──────────────────────────────────────────────────────────
+  /// Tổng số tin nhắn chưa đọc của user hiện tại trên tất cả conversations
+  int totalUnread(String myId) => conversations.fold(
+        0,
+        (sum, c) => sum + (c.unreadCount[myId] ?? 0),
+      );
+
   // ── Conversation list ─────────────────────────────────────────────────────
   List<ConversationModel> conversations = [];
   bool isLoadingConvs = false;
@@ -110,6 +117,26 @@ class ConversationViewModel extends ChangeNotifier {
     conversations.insert(0, updated);
   }
 
+  /// Tăng unread cho tất cả participants trừ sender
+  void _incrementUnread(String convId, String senderId) {
+    final idx = conversations.indexWhere((c) => c.id == convId);
+    if (idx == -1) return;
+    final old = conversations[idx];
+    final newCount = Map<String, int>.from(old.unreadCount);
+    for (final p in old.participants) {
+      if (p != senderId) {
+        newCount[p] = (newCount[p] ?? 0) + 1;
+      }
+    }
+    conversations[idx] = ConversationModel(
+      id: old.id,
+      participants: old.participants,
+      lastMessage: old.lastMessage,
+      lastMessageAt: old.lastMessageAt,
+      unreadCount: newCount,
+    );
+  }
+
   Future<void> markRead(String convId, String myId) async {
     try {
       await _repo.markRead(convId);
@@ -182,6 +209,8 @@ class ConversationViewModel extends ChangeNotifier {
       if (msg.conversationId == convId) {
         _appendMessage(convId, msg);
         _updateConvLastMessage(convId, msg.content);
+        // Tăng unread nếu không phải tin của mình
+        _incrementUnread(convId, msg.senderId);
         notifyListeners();
       }
     });

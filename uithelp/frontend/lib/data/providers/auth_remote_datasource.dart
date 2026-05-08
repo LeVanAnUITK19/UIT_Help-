@@ -64,10 +64,6 @@ class AuthRemoteDatasource {
     );
   }
 
-  Future<void> updateFcmToken(String fcmToken) async {
-    await _dio.put(Api.updateFcmToken, data: {'fcmToken': fcmToken});
-  }
-
   Future<Map<String, dynamic>> fetchProfile() async {
     final res = await _dio.get('/auth/profile');
     return res.data as Map<String, dynamic>;

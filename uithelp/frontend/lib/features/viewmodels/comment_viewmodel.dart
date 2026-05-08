@@ -78,7 +78,7 @@ class CommentViewModel extends ChangeNotifier {
   }
   //Xử lý socket
   void connectSocket(String postId) {
-    _socket = IO.io('http://localhost:3000', {
+    _socket = IO.io('https://uit-help.onrender.com', {
       'transports': ['websocket'],
       'autoConnect': false,
     });

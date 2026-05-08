@@ -50,43 +50,52 @@ class _RideFilterBarState extends State<RideFilterBar> {
 
     return Container(
       color: surface,
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Type toggle ──────────────────────────────────────────────────
+          // ── Type toggle + Lọc button ─────────────────────────────────────
           Row(
             children: [
-              _TypeToggle(
-                label: 'Tất cả',
-                icon: Icons.list_rounded,
-                selected: _type == null,
-                onTap: () => setState(() => _type = null),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _TypeToggle(
+                        label: 'Tất cả',
+                        icon: Icons.list_rounded,
+                        selected: _type == null,
+                        onTap: () => setState(() => _type = null),
+                      ),
+                      const SizedBox(width: 6),
+                      _TypeToggle(
+                        label: 'Tìm bạn đi',
+                        icon: Icons.search_rounded,
+                        selected: _type == 'find',
+                        onTap: () => setState(
+                            () => _type = _type == 'find' ? null : 'find'),
+                        color: AppColors.uitBlue,
+                      ),
+                      const SizedBox(width: 6),
+                      _TypeToggle(
+                        label: 'Rủ đi cùng',
+                        icon: Icons.directions_bike_rounded,
+                        selected: _type == 'offer',
+                        onTap: () => setState(
+                            () => _type = _type == 'offer' ? null : 'offer'),
+                        color: AppColors.success,
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(width: 8),
-              _TypeToggle(
-                label: 'Tìm bạn đi',
-                icon: Icons.search_rounded,
-                selected: _type == 'find',
-                onTap: () => setState(() => _type = _type == 'find' ? null : 'find'),
-                color: AppColors.uitBlue,
-              ),
-              const SizedBox(width: 8),
-              _TypeToggle(
-                label: 'Rủ đi cùng',
-                icon: Icons.directions_bike_rounded,
-                selected: _type == 'offer',
-                onTap: () =>
-                    setState(() => _type = _type == 'offer' ? null : 'offer'),
-                color: AppColors.success,
-              ),
-              const Spacer(),
-              // Apply button
               GestureDetector(
                 onTap: () => widget.onFilter(_type, _fromId, _toId),
                 child: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [AppColors.uitBlue, AppColors.slateBlue],
@@ -105,7 +114,7 @@ class _RideFilterBarState extends State<RideFilterBar> {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           // ── Location filters ─────────────────────────────────────────────
           Row(
             children: [
@@ -118,10 +127,11 @@ class _RideFilterBarState extends State<RideFilterBar> {
                   onChanged: (v) => setState(() => _fromId = v),
                 ),
               ),
-              const SizedBox(width: 8),
-              Icon(Icons.arrow_forward_rounded,
-                  size: 16, color: textSecondary),
-              const SizedBox(width: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: Icon(Icons.arrow_forward_rounded,
+                    size: 16, color: textSecondary),
+              ),
               Expanded(
                 child: _LocationDropdown(
                   hint: 'Đến',

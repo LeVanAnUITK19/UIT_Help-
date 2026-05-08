@@ -9,6 +9,7 @@ import '../ride/ride_detail_page.dart';
 import '../ride/create_ride_page.dart';
 import 'widgets/post_card.dart';
 import 'widgets/create_post_sheet.dart';
+import 'widgets/create_locket_sheet.dart';
 import 'my_locket_page.dart';
 
 class MyWritePage extends StatefulWidget {
@@ -209,6 +210,14 @@ class _MyWritePageState extends State<MyWritePage>
                 context,
                 MaterialPageRoute(builder: (_) => const CreateRidePage()),
               ).then((_) => context.read<RideViewModel>().loadMyRides(refresh: true));
+            } else {
+              // Tab Locket
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (_) => const CreateLocketSheet(),
+              ).then((_) => context.read<LocketViewModel>().loadMyLockets(refresh: true));
             }
           },
           child: Container(
@@ -552,10 +561,11 @@ class _MyRideCard extends StatelessWidget {
   }
 
   String _fmtDt(DateTime dt) {
-    final h = dt.hour.toString().padLeft(2, '0');
-    final m = dt.minute.toString().padLeft(2, '0');
-    final d = dt.day.toString().padLeft(2, '0');
-    final mo = dt.month.toString().padLeft(2, '0');
+    final local = dt.toLocal();
+    final h = local.hour.toString().padLeft(2, '0');
+    final m = local.minute.toString().padLeft(2, '0');
+    final d = local.day.toString().padLeft(2, '0');
+    final mo = local.month.toString().padLeft(2, '0');
     return '$h:$m  $d/$mo';
   }
 }

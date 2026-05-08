@@ -6,6 +6,7 @@ import '../../../features/viewmodels/auth_viewmodel.dart';
 import '../../../features/viewmodels/post_viewmodel.dart';
 import '../../../features/viewmodels/notification_viewmodel.dart';
 import '../../../features/viewmodels/locket_viewmodel.dart';
+import '../../../features/viewmodels/conversation_viewmodel.dart';
 import '../../../features/views/chat/conversation_list_sheet.dart';
 import 'myWrite_page.dart';
 import 'notification_page.dart';
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> {
       context.read<LocketViewModel>().loadLockets(refresh: true);
       context.read<PostViewModel>().loadPosts(refresh: true);
       context.read<NotificationViewModel>().fetchUnreadCount();
+      context.read<ConversationViewModel>().loadConversations();
     });
     _scrollCtrl.addListener(_onScroll);
   }
@@ -247,6 +249,10 @@ class _AppBar extends StatelessWidget {
                 _AppBarBtn(
                   icon: Icons.chat_bubble_outline_rounded,
                   isDark: isDark,
+                  badge: () {
+                    final myId = context.read<AuthViewModel>().currentUser?.id ?? '';
+                    return context.watch<ConversationViewModel>().totalUnread(myId);
+                  }(),
                   onTap: () => showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
@@ -278,28 +284,58 @@ class _AppBarBtn extends StatelessWidget {
   final IconData icon;
   final bool isDark;
   final VoidCallback onTap;
+  final int badge;
+
   const _AppBarBtn({
     required this.icon,
     required this.isDark,
     required this.onTap,
+    this.badge = 0,
   });
 
   @override
   Widget build(BuildContext context) {
+    final bg = isDark ? Colors.white.withOpacity(0.08) : Colors.grey.shade100;
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: 38,
-        height: 38,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: isDark ? Colors.white.withOpacity(0.08) : Colors.grey.shade100,
-        ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: isDark ? Colors.white70 : Colors.grey[700],
-        ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: bg),
+            child: Icon(icon, size: 20,
+                color: isDark ? Colors.white70 : Colors.grey[700]),
+          ),
+          if (badge > 0)
+            Positioned(
+              top: -3,
+              right: -4,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEF4444),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: isDark ? const Color(0xFF1A2235) : Colors.white,
+                    width: 1.5,
+                  ),
+                ),
+                constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                child: Text(
+                  badge > 99 ? '99+' : '$badge',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w700,
+                    height: 1.2,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -312,7 +348,7 @@ class _NavBar extends StatelessWidget {
   const _NavBar({required this.selectedIndex, required this.onTap});
 
   static const _items = [
-    (Icons.camera_alt_rounded,           Icons.camera_alt_outlined,              'Trang chủ'),
+    (Icons.home_rounded,           Icons.home_outlined,              'Trang chủ'),
     (Icons.search_rounded,         Icons.search_outlined,             'Tìm đồ'),
     (Icons.directions_bike_rounded, Icons.two_wheeler,               'Đi học'),
     (Icons.edit_rounded,           Icons.edit_outlined,               'Bài viết'),

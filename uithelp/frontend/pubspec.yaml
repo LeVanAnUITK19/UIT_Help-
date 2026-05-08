@@ -42,9 +42,6 @@ dependencies:
   cookie_jar: ^4.0.8
   image_picker: ^1.1.2
   socket_io_client: ^2.0.3+1
-  
-  firebase_core: ^3.13.0
-  firebase_messaging: ^15.1.6
 
 
 

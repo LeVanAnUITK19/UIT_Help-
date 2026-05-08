@@ -20,15 +20,17 @@ class MessagePage extends StatefulWidget {
   State<MessagePage> createState() => _MessagePageState();
 }
 
-class _MessagePageState extends State<MessagePage> {
+class _MessagePageState extends State<MessagePage> with WidgetsBindingObserver {
   final _inputCtrl = TextEditingController();
   final _scrollCtrl = ScrollController();
   final _focusNode = FocusNode();
   String? _myId;
+  int _lastMessageCount = 0; // theo dõi số tin để detect tin mới đến
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _myId = context.read<AuthViewModel>().currentUser?.id;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final vm = context.read<ConversationViewModel>();
@@ -48,6 +50,16 @@ class _MessagePageState extends State<MessagePage> {
     });
 
     _scrollCtrl.addListener(_onScroll);
+  }
+
+  /// Gọi mỗi khi bàn phím mở/đóng — scroll xuống cuối
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.platformDispatcher.views.first.viewInsets.bottom;
+    if (bottomInset > 100) {
+      // Bàn phím vừa mở
+      Future.delayed(const Duration(milliseconds: 100), _scrollToBottom);
+    }
   }
 
   void _onScroll() {
@@ -71,6 +83,7 @@ class _MessagePageState extends State<MessagePage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     context.read<ConversationViewModel>().disconnectSocket();
     _inputCtrl.dispose();
     _scrollCtrl.dispose();
@@ -84,7 +97,7 @@ class _MessagePageState extends State<MessagePage> {
     _inputCtrl.clear();
     final vm = context.read<ConversationViewModel>();
     await vm.sendMessage(widget.conversation.id, text);
-    _scrollToBottom();
+    // scroll tự động qua _lastMessageCount trong build()
   }
 
   @override
@@ -95,7 +108,14 @@ class _MessagePageState extends State<MessagePage> {
     final vm = context.watch<ConversationViewModel>();
     final messages = vm.messagesFor(widget.conversation.id);
 
+    // Khi có tin nhắn mới đến (từ socket hoặc gửi đi) → scroll xuống cuối
+    if (messages.length > _lastMessageCount) {
+      _lastMessageCount = messages.length;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+    }
+
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: bg,
       appBar: AppBar(
         backgroundColor: appBarBg,
@@ -146,7 +166,7 @@ class _MessagePageState extends State<MessagePage> {
                       )
                     : ListView.builder(
                         controller: _scrollCtrl,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
                         itemCount: messages.length,
                         itemBuilder: (_, i) {
                           final msg = messages[i];
@@ -323,8 +343,9 @@ class _MessageBubble extends StatelessWidget {
   }
 
   String _formatTime(DateTime dt) {
-    final h = dt.hour.toString().padLeft(2, '0');
-    final m = dt.minute.toString().padLeft(2, '0');
+    final local = dt.toLocal();
+    final h = local.hour.toString().padLeft(2, '0');
+    final m = local.minute.toString().padLeft(2, '0');
     return '$h:$m';
   }
 }
@@ -352,8 +373,10 @@ class _InputBar extends StatelessWidget {
     return Container(
       color: bg,
       padding: EdgeInsets.only(
-        left: 12, right: 12, top: 8,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 12,
+        left: 12,
+        right: 12,
+        top: 8,
+        bottom: MediaQuery.of(context).padding.bottom + 8,
       ),
       child: Row(
         children: [

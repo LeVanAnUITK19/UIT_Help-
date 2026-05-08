@@ -86,7 +86,7 @@ class _CreateRidePageState extends State<CreateRidePage> {
       'type': _type,
       'from': _from!.toJson(),
       'to': _to!.toJson(),
-      'departureTime': _departureTime.toIso8601String(),
+      'departureTime': _departureTime.toUtc().toIso8601String(),
       'description': _descCtrl.text.trim(),
       'contact': _contactCtrl.text.trim(),
     });
@@ -336,8 +336,7 @@ class _CreateRidePageState extends State<CreateRidePage> {
     final d = dt.day.toString().padLeft(2, '0');
     final mo = dt.month.toString().padLeft(2, '0');
     return '$h:$m - $d/$mo/${dt.year}';
-  }
-}
+  }}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

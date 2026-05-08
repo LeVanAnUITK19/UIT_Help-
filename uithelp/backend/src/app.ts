@@ -28,5 +28,8 @@ app.use("/api/lockets", locketRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/conversations", conversationRoutes);
 app.use("/api/rides", rideRoutes);
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok" });
+});
 
 export default app;

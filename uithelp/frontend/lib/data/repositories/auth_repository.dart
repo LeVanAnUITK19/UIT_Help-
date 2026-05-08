@@ -104,14 +104,6 @@ class AuthRepository {
     }
   }
 
-  Future<void> updateFcmToken(String fcmToken) async {
-    try {
-      await _remote.updateFcmToken(fcmToken);
-    } catch (_) {
-      // silent fail — không block login
-    }
-  }
-
   Future<AuthResult<UserModel>> fetchProfile() async {
     try {
       final raw = await _remote.fetchProfile();

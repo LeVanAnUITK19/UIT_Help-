@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'core/themes/app_theme.dart';
-import 'core/services/fcm_service.dart';
 import 'features/views/auth/login_page.dart';
 import 'features/views/home/home_page.dart';
 import 'features/viewmodels/auth_viewmodel.dart';
@@ -29,23 +27,14 @@ import 'data/repositories/ride_repository.dart';
 import 'data/providers/ride_remote_datasource.dart';
 import 'core/constants/dio_client.dart';
 import 'core/constants/token_storage.dart';
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Init Firebase — chỉ chạy khi đã có google-services.json + firebase_options.dart
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    // Đăng ký background message handler
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  } catch (e) {
-    debugPrint('[Firebase] Init failed: $e');
-    // App vẫn chạy bình thường, chỉ không có push notification
-  }
-
+  // Khóa màn hình chỉ dọc
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(
     MultiProvider(
       providers: [
@@ -122,33 +111,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _setupFcmListeners();
     _checkLogin();
-  }
-
-  void _setupFcmListeners() {
-    // Foreground: hiển thị snackbar đơn giản
-    FcmService.listenForeground(
-      onMessage: (message) {
-        final title = message.notification?.title ?? '';
-        final body = message.notification?.body ?? '';
-        if (mounted && (title.isNotEmpty || body.isNotEmpty)) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('$title: $body'),
-              duration: const Duration(seconds: 4),
-            ),
-          );
-        }
-      },
-    );
-
-    // Background tap: có thể navigate sau này
-    FcmService.listenOnTap(
-      onTap: (message) {
-        // TODO: navigate dựa vào message.data['type']
-      },
-    );
   }
 
   void _checkLogin() async {

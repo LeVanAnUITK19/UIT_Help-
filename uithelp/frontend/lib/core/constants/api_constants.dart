@@ -1,6 +1,6 @@
 class Api {
   //static const String baseUrl = 'http://10.0.2.2:3000/api'; // Android emulator
-  static const String baseUrl = 'http://localhost:3000/api'; // Web/iOS
+  static const String baseUrl = 'https://uit-help.onrender.com/api'; // Production
   //static const String baseUrl   = 'http://192.168.20.31:3000/api'; // Mạng Lan LVAn
 
   // Auth endpoints
@@ -20,9 +20,6 @@ class Api {
   static String updatePost(String id) => "/posts/$id";
   static String deletePost(String id) => "/posts/$id";
   static String getPostById(String id) => "/posts/$id";
-
-  // FCM
-  static const String updateFcmToken = "/auth/fcm-token";
 
   //Comment
   static const String createComment = "/comments/";

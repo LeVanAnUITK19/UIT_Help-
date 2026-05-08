@@ -239,3 +239,4 @@ export const sendEmail = async (to: string, otp: string) => {
         text: `Mã OTP của bạn là: ${otp}`,
     });
 };
+
