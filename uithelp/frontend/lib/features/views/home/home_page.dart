@@ -11,6 +11,8 @@ import 'myWrite_page.dart';
 import 'notification_page.dart';
 import 'setting_page.dart';
 import 'locket_page.dart';
+import '../../views/ride/ride_page.dart';
+import '../../views/ride/ride_detail_page.dart';
 import 'widgets/post_card.dart';
 import 'widgets/create_post_sheet.dart';
 import 'widgets/comment_sheet.dart';
@@ -32,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<LocketViewModel>().loadLockets(refresh: true);
       context.read<PostViewModel>().loadPosts(refresh: true);
       context.read<NotificationViewModel>().fetchUnreadCount();
     });
@@ -43,7 +46,7 @@ class _HomePageState extends State<HomePage> {
     final targetId = vm.pendingScrollToPostId;
     if (targetId == null) return;
     vm.clearPendingScroll();
-    setState(() => _selectedIndex = 0);
+    setState(() => _selectedIndex = 1);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final key = _postKeys[targetId];
       if (key?.currentContext != null) {
@@ -65,8 +68,8 @@ class _HomePageState extends State<HomePage> {
     switch (nav.type) {
       case NotifNavType.post:
         if (nav.id != null) {
-          // Switch về feed tab rồi scroll đến post, đồng thời mở comment sheet
-          setState(() => _selectedIndex = 0);
+          // Switch về feed tab (index 1) rồi scroll đến post
+          setState(() => _selectedIndex = 1);
           context.read<PostViewModel>().requestScrollToPost(nav.id!);
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -82,8 +85,8 @@ class _HomePageState extends State<HomePage> {
         break;
       case NotifNavType.locket:
         if (nav.id != null) {
-          // Switch sang tab Locket (index 2)
-          setState(() => _selectedIndex = 2);
+          // Switch sang tab Locket (index 0 — home)
+          setState(() => _selectedIndex = 0);
           // Mở comment sheet của locket
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -97,12 +100,28 @@ class _HomePageState extends State<HomePage> {
           });
         }
         break;
+      case NotifNavType.ride:
+        if (nav.id != null) {
+          // Mở RideDetailPage trực tiếp
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => RideDetailPage(rideId: nav.id!),
+                ),
+              );
+            }
+          });
+        }
+        break;
       case NotifNavType.none:
         break;
     }
   }
 
   void _onScroll() {
+    if (_selectedIndex != 1) return;
     if (_scrollCtrl.position.pixels >=
         _scrollCtrl.position.maxScrollExtent - 200) {
       context.read<PostViewModel>().loadPosts();
@@ -157,15 +176,17 @@ class _HomePageState extends State<HomePage> {
   Widget _buildBody(bool isDark) {
     switch (_selectedIndex) {
       case 1:
-        return const MyWritePage();
+        return _FeedView(scrollCtrl: _scrollCtrl, postKeys: _postKeys);
       case 2:
-        return const LocketPage();
+        return const RidePage();
       case 3:
-        return const NotificationPage();
+        return const MyWritePage();
       case 4:
+        return const NotificationPage();
+      case 5:
         return const SettingPage();
       default:
-        return _FeedView(scrollCtrl: _scrollCtrl, postKeys: _postKeys);
+        return const LocketPage();
     }
   }
 }
@@ -291,11 +312,12 @@ class _NavBar extends StatelessWidget {
   const _NavBar({required this.selectedIndex, required this.onTap});
 
   static const _items = [
-    (Icons.home_rounded, Icons.home_outlined, 'Trang chủ'),
-    (Icons.edit_rounded, Icons.edit_outlined, 'Bài viết'),
-    (Icons.camera_alt_rounded, Icons.camera_alt_outlined, 'Camera'),
-    (Icons.notifications_rounded, Icons.notifications_outlined, 'Thông báo'),
-    (Icons.person_rounded, Icons.person_outlined, 'Thông tin'),
+    (Icons.camera_alt_rounded,           Icons.camera_alt_outlined,              'Trang chủ'),
+    (Icons.search_rounded,         Icons.search_outlined,             'Tìm đồ'),
+    (Icons.directions_bike_rounded, Icons.two_wheeler,               'Đi học'),
+    (Icons.edit_rounded,           Icons.edit_outlined,               'Bài viết'),
+    (Icons.notifications_rounded,  Icons.notifications_outlined,      'Thông báo'),
+    (Icons.person_rounded,         Icons.person_outlined,             'Cá nhân'),
   ];
 
   @override
@@ -319,7 +341,7 @@ class _NavBar extends StatelessWidget {
             child: Row(
               children: List.generate(_items.length, (i) {
                 final active = selectedIndex == i;
-                final isNotif = i == 3;
+                final isNotif = i == 4;
                 return Expanded(
                   child: GestureDetector(
                     onTap: () => onTap(i),

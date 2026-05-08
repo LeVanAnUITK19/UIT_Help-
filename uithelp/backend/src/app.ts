@@ -7,6 +7,7 @@ import commentRoutes from "./modules/comments/comment.route";
 import locketRoutes from "./modules/locket/locket.route";
 import notificationRoutes from "./modules/notifications/notification.route";
 import conversationRoutes from "./modules/conversation/conversation.route";
+import rideRoutes from "./modules/ride/ride.route";
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/lockets", locketRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/conversations", conversationRoutes);
+app.use("/api/rides", rideRoutes);
 
 export default app;

@@ -3,7 +3,7 @@ import '../../data/models/notification_model.dart';
 import '../../data/repositories/notification_repository.dart';
 
 // Loại navigate khi nhấn thông báo
-enum NotifNavType { post, locket, none }
+enum NotifNavType { post, locket, ride, none }
 
 class NotifNavIntent {
   final NotifNavType type;
@@ -67,7 +67,9 @@ class NotificationViewModel extends ChangeNotifier {
       await markAsRead(notif.id);
     }
     // Xác định loại navigate
-    if (notif.postId != null && notif.postId!.isNotEmpty) {
+    if (notif.rideId != null && notif.rideId!.isNotEmpty) {
+      pendingNav = NotifNavIntent(NotifNavType.ride, notif.rideId);
+    } else if (notif.postId != null && notif.postId!.isNotEmpty) {
       pendingNav = NotifNavIntent(NotifNavType.post, notif.postId);
     } else if (notif.locketId != null && notif.locketId!.isNotEmpty) {
       pendingNav = NotifNavIntent(NotifNavType.locket, notif.locketId);

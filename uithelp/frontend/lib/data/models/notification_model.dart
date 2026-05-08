@@ -6,6 +6,7 @@ class NotificationModel {
   final String? message;
   final String? postId;
   final String? locketId;
+  final String? rideId;
   final String? senderId;
   final bool isRead;
   final DateTime createdAt;
@@ -18,6 +19,7 @@ class NotificationModel {
     this.message,
     this.postId,
     this.locketId,
+    this.rideId,
     this.senderId,
     required this.isRead,
     required this.createdAt,
@@ -32,6 +34,7 @@ class NotificationModel {
         message: json['message'] as String?,
         postId: json['postId'] as String?,
         locketId: json['locketId'] as String?,
+        rideId: json['rideId'] as String?,
         senderId: json['senderId'] as String?,
         isRead: json['isRead'] as bool? ?? false,
         createdAt: json['createdAt'] != null
@@ -47,6 +50,7 @@ class NotificationModel {
         message: message,
         postId: postId,
         locketId: locketId,
+        rideId: rideId,
         senderId: senderId,
         isRead: isRead ?? this.isRead,
         createdAt: createdAt,

@@ -67,4 +67,24 @@ class Api {
 
   // Users
   static String getUserById(String id) => "/auth/users/$id";
+
+  // Rides
+  static const String getRides = '/rides';
+  static const String createRide = '/rides';
+  static const String getMyRides = '/rides/my';
+  static const String getJoinedRides = '/rides/joined';
+  static const String getMyRideRequests = '/rides/me/requests';
+  static String getRideById(String id) => '/rides/$id';
+  static String updateRide(String id) => '/rides/$id';
+  static String deleteRide(String id) => '/rides/$id';
+  static String requestJoinRide(String id) => '/rides/$id/request';
+  static String getRideRequests(String id) => '/rides/$id/requests';
+  static String acceptRideRequest(String requestId) => '/rides/requests/$requestId/accept';
+  static String rejectRideRequest(String requestId) => '/rides/requests/$requestId/reject';
+  static String cancelRideRequest(String requestId) => '/rides/requests/$requestId';
+  static String leaveRide(String id) => '/rides/$id/leave';
+  static String removeParticipant(String id, String userId) => '/rides/$id/participants/$userId';
+  static String getMatchedRides(String id) => '/rides/$id/matches';
+  static String completeRide(String id) => '/rides/$id/complete';
+  static String cancelRide(String id) => '/rides/$id/cancel';
 }

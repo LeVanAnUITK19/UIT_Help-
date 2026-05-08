@@ -24,6 +24,9 @@ import 'data/providers/notification_remote_datasource.dart';
 import 'features/viewmodels/conversation_viewmodel.dart';
 import 'data/repositories/conversation_repository.dart';
 import 'data/providers/conversation_remote_datasource.dart';
+import 'features/viewmodels/ride_viewmodel.dart';
+import 'data/repositories/ride_repository.dart';
+import 'data/providers/ride_remote_datasource.dart';
 import 'core/constants/dio_client.dart';
 import 'core/constants/token_storage.dart';
 import 'firebase_options.dart';
@@ -78,6 +81,11 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => ConversationViewModel(
             ConversationRepository(ConversationRemoteDatasource()),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => RideViewModel(
+            RideRepository(RideRemoteDatasource()),
           ),
         ),
       ],

@@ -4,8 +4,8 @@ import cloudinary from "../../config/cloudinary";
 import streamifier from "streamifier";
 import User from "../auth/auth.model";
 import { analyzeImage } from "../../utils/analyzeImage";
-import { matchPost } from "../matches/match.controller";
-import Match from "../matches/match.model";
+import { matchPost } from "./post.match.controller";
+import Match from "./post.match.model";
 
 const uploadToCloudinary = (buffer: Buffer): Promise<string> => {
     return new Promise((resolve, reject) => {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Post from "../posts/post.model";
+import Post from "./post.model";
 import User from "../auth/auth.model";
-import Match from "../matches/match.model";
+import Match from "./post.match.model";
 import { sendPush } from "../../utils/sendPushNotification";
 import { createNotification } from "../notifications/notification.service";
 

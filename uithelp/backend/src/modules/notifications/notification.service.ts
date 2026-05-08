@@ -2,7 +2,7 @@ import Notification from "./notification.model";
 
 interface CreateNotifOptions {
   userId: string;
-  type: "match" | "comment" | "reaction" | "ride_join";
+  type: "match" | "comment" | "reaction" | "ride_request" | "ride_accepted" | "ride_rejected";
   title: string;
   message?: string;
   senderId?: string;

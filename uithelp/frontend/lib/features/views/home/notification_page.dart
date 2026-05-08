@@ -226,21 +226,27 @@ class _NotifTile extends StatelessWidget {
 
   IconData _iconData(String type) {
     switch (type) {
-      case 'match': return Icons.search_rounded;
-      case 'comment': return Icons.chat_bubble_rounded;
-      case 'reaction': return Icons.favorite_rounded;
-      case 'ride_join': return Icons.directions_car_rounded;
-      default: return Icons.notifications_rounded;
+      case 'match':            return Icons.search_rounded;
+      case 'comment':          return Icons.chat_bubble_rounded;
+      case 'reaction':         return Icons.favorite_rounded;
+      case 'ride_request':     return Icons.directions_bike_rounded;
+      case 'ride_accepted':    return Icons.check_circle_rounded;
+      case 'ride_rejected':    return Icons.cancel_rounded;
+      case 'ride_join':        return Icons.directions_bike_rounded;
+      default:                 return Icons.notifications_rounded;
     }
   }
 
   Color _iconBg(String type) {
     switch (type) {
-      case 'match': return AppColors.uitBlue;
-      case 'comment': return AppColors.success;
-      case 'reaction': return AppColors.error;
-      case 'ride_join': return AppColors.warning;
-      default: return AppColors.lightTextSecondary;
+      case 'match':            return AppColors.uitBlue;
+      case 'comment':          return AppColors.success;
+      case 'reaction':         return AppColors.error;
+      case 'ride_request':     return AppColors.warning;
+      case 'ride_accepted':    return AppColors.success;
+      case 'ride_rejected':    return AppColors.error;
+      case 'ride_join':        return AppColors.warning;
+      default:                 return AppColors.lightTextSecondary;
     }
   }
 
