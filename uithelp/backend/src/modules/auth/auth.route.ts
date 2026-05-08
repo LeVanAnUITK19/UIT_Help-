@@ -8,8 +8,6 @@ import {
   verifyForgotOtp,
   resetPassword,
   verifyRegisterOtp,
-  updateFcmToken,
-  getFcmToken,
 } from "../auth/auth.controller";
 import { authMiddleware } from "../../middleware/auth.middleware";
 import { Request, Response } from "express";
@@ -24,8 +22,6 @@ router.post("/forgetPassword", forgotPassword);
 router.post("/verifyForgotOtp", verifyForgotOtp);
 router.post("/verifyRegisterOtp", verifyRegisterOtp);
 router.post("/resetPassword", resetPassword);
-router.put("/fcm-token", authMiddleware, updateFcmToken);
-router.get("/fcm-token", authMiddleware, getFcmToken);
 
 router.get("/profile", authMiddleware, async (req: Request, res: Response) => {
   const user = await (await import("../auth/auth.model")).default

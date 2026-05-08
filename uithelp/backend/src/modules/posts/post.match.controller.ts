@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import Post from "./post.model";
 import User from "../auth/auth.model";
 import Match from "./post.match.model";
-import { sendPush } from "../../utils/sendPushNotification";
 import { createNotification } from "../notifications/notification.service";
 
 /**
@@ -162,18 +161,9 @@ export const matchPost = async (newPost: any) => {
       )
     );
 
-    // Gửi push + internal notification cho chủ bài đăng nếu có match điểm cao nhất
+    // Gửi internal notification cho chủ bài đăng nếu có match điểm cao nhất
     if (topMatches.length > 0) {
       const best = topMatches[0];
-      const owner = await User.findById(newPost.userId);
-      if (owner?.fcmToken) {
-        await sendPush(
-          owner.fcmToken,
-          "🔍 Có bài viết liên quan!",
-          `Bài "${newPost.title}" khớp ${best.score}đ với một bài đăng khác`,
-          { type: "match", postId: newPost._id.toString() }
-        );
-      }
       await createNotification({
         userId: newPost.userId.toString(),
         type: "match",
@@ -185,15 +175,6 @@ export const matchPost = async (newPost: any) => {
       // Thông báo cho chủ bài kia (postB)
       const matchedPost = best.post as any;
       if (matchedPost?.userId) {
-        const otherOwner = await User.findById(matchedPost.userId);
-        if (otherOwner?.fcmToken) {
-          await sendPush(
-            otherOwner.fcmToken,
-            "🔍 Có bài viết liên quan!",
-            `Bài "${matchedPost.title}" có thể khớp với một bài đăng mới`,
-            { type: "match", postId: matchedPost._id?.toString() }
-          );
-        }
         await createNotification({
           userId: matchedPost.userId.toString(),
           type: "match",

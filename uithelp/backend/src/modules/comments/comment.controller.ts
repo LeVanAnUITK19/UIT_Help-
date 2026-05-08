@@ -3,7 +3,6 @@ import Comment from "./comment.model";
 import Post from "../posts/post.model";
 import User from "../auth/auth.model";
 import { io } from "../../server";
-import { sendPush } from "../../utils/sendPushNotification";
 import { createNotification } from "../notifications/notification.service";
 
 export const createComment = async (req: Request, res: Response) => {
@@ -19,18 +18,8 @@ export const createComment = async (req: Request, res: Response) => {
         await Post.findByIdAndUpdate(postId, { $inc: { commentCount: 1 } });
         io.to(postId).emit("new_comment", comment);
 
-        // Gửi push cho chủ bài nếu người comment không phải chủ bài
+        // Gửi thông báo cho chủ bài nếu người comment không phải chủ bài
         if (postExists.userId.toString() !== userId) {
-          const postOwner = await User.findById(postExists.userId);
-          if (postOwner?.fcmToken) {
-            await sendPush(
-              postOwner.fcmToken,
-              "💬 Bình luận mới",
-              `${user?.name ?? "Ai đó"} đã bình luận vào bài của bạn`,
-              { type: "comment", postId }
-            );
-          }
-          // Tạo internal notification
           await createNotification({
             userId: postExists.userId.toString(),
             senderId: userId,

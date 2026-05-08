@@ -4,7 +4,6 @@ import { Locket, LocketReaction, LocketComment } from "./locket.model";
 import User from "../auth/auth.model";
 import cloudinary from "../../config/cloudinary";
 import streamifier from "streamifier";
-import { sendPush } from "../../utils/sendPushNotification";
 import { createNotification } from "../notifications/notification.service";
 
 const uploadToCloudinary = (buffer: Buffer): Promise<string> => {
@@ -131,17 +130,8 @@ export const reactToLocket = async (req: Request, res: Response) => {
         });
         await Locket.findByIdAndUpdate(id, { $inc: { reactionsCount: 1 } });
 
-        // Gửi push cho chủ locket nếu người react không phải chủ
+        // Gửi thông báo cho chủ locket nếu người react không phải chủ
         if (locket.userId.toString() !== userId) {
-            const locketOwner = await User.findById(locket.userId);
-            if (locketOwner?.fcmToken) {
-                await sendPush(
-                    locketOwner.fcmToken,
-                    "❤️ Locket của bạn có react mới",
-                    `${user?.name ?? "Ai đó"} đã react locket của bạn`,
-                    { type: "locket_react", locketId: id }
-                );
-            }
             await createNotification({
                 userId: locket.userId.toString(),
                 senderId: userId,
@@ -188,17 +178,8 @@ export const commentOnLocket = async (req: Request, res: Response) => {
             content,
         });
 
-        // Gửi push cho chủ locket nếu người comment không phải chủ
+        // Gửi thông báo cho chủ locket nếu người comment không phải chủ
         if (locket.userId.toString() !== userId) {
-            const locketOwner = await User.findById(locket.userId);
-            if (locketOwner?.fcmToken) {
-                await sendPush(
-                    locketOwner.fcmToken,
-                    "💬 Bình luận mới trên Locket",
-                    `${user?.name ?? "Ai đó"} đã bình luận locket của bạn`,
-                    { type: "locket_comment", locketId: id }
-                );
-            }
             await createNotification({
                 userId: locket.userId.toString(),
                 senderId: userId,

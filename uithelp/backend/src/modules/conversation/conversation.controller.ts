@@ -3,7 +3,6 @@ import Conversation from "./conversation.model";
 import Message from "./message.model";
 import User from "../auth/auth.model";
 import { io } from "../../server";
-import { sendPush } from "../../utils/sendPushNotification";
 
 interface ConversationLean {
   _id: any;
@@ -141,21 +140,6 @@ export const sendMessage = async (req: Request, res: Response) => {
 
     // Realtime
     io.to(conversationId).emit("new_message", message);
-
-    // Push notification
-    if (receiverId) {
-      const receiver = await User.findById(receiverId).lean() as any;
-      const sender = await User.findById(senderId).select("name").lean() as any;
-      const fcmToken = receiver?.fcmToken as string | undefined;
-      if (fcmToken) {
-        await sendPush(
-          fcmToken,
-          `💬 ${sender?.name ?? "Ai đó"}`,
-          content.trim(),
-          { type: "message", conversationId: String(conversationId) }
-        );
-      }
-    }
 
     res.status(201).json(message);
   } catch (error) {
